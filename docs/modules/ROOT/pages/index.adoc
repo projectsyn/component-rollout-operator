@@ -1,0 +1,5 @@
+= Rollout Operator
+
+rollout-operator is a Commodore component to manage Rollout Operator.
+
+See the xref:references/parameters.adoc[parameters] reference for further details.

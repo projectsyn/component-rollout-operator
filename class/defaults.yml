@@ -1,0 +1,5 @@
+parameters:
+  rollout_operator:
+    =_metadata:
+      multi_tenant: true
+    namespace: syn-rollout-operator
