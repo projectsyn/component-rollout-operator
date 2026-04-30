@@ -1,0 +1,40 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  labels:
+    app.kubernetes.io/instance: rollout-operator
+    app.kubernetes.io/managed-by: commodore
+    app.kubernetes.io/name: rollout-operator
+    app.kubernetes.io/version: v0.36.1
+    grafana.com/inject-rollout-operator-ca: 'true'
+    grafana.com/namespace: syn-rollout-operator
+    helm.sh/chart: rollout-operator-0.47.0
+  name: prepare-downscale-syn-rollout-operator
+webhooks:
+  - admissionReviewVersions:
+      - v1
+    clientConfig:
+      service:
+        name: rollout-operator
+        namespace: syn-rollout-operator
+        path: /admission/prepare-downscale
+        port: 443
+    failurePolicy: Fail
+    matchPolicy: Equivalent
+    name: prepare-downscale-syn-rollout-operator.grafana.com
+    namespaceSelector:
+      matchLabels:
+        rollout-operator.syn.tools/allow: ''
+    rules:
+      - apiGroups:
+          - apps
+        apiVersions:
+          - v1
+        operations:
+          - UPDATE
+        resources:
+          - statefulsets
+          - statefulsets/scale
+        scope: Namespaced
+    sideEffects: NoneOnDryRun
+    timeoutSeconds: 10

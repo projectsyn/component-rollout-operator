@@ -1,0 +1,13 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: rollout-operator-webhook-rolebinding
+  namespace: syn-rollout-operator
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: rollout-operator-webhook-role
+subjects:
+  - kind: ServiceAccount
+    name: rollout-operator
+    namespace: syn-rollout-operator

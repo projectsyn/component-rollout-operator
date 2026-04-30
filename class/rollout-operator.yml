@@ -1,5 +1,12 @@
 parameters:
   kapitan:
+    dependencies:
+      - type: helm
+        source: ${rollout_operator:charts:rollout-operator:source}
+        chart_name: rollout-operator
+        version: ${rollout_operator:charts:rollout-operator:version}
+        output_path: ${_base_directory}/helmcharts/rollout-operator/${rollout_operator:charts:rollout-operator:version}
+
     compile:
       - input_paths:
           - ${_base_directory}/component/app.jsonnet
@@ -9,3 +16,20 @@ parameters:
           - ${_base_directory}/component/main.jsonnet
         input_type: jsonnet
         output_path: rollout-operator/
+
+      # Helm chart
+      - input_type: jsonnet
+        input_paths:
+          - ${_base_directory}/component/helm.jsonnet
+        output_path: ${_base_directory}/helmcharts/rollout-operator/${rollout_operator:charts:rollout-operator:version}/
+      - input_type: helm
+        output_type: yaml
+        input_paths:
+          - ${_base_directory}/helmcharts/rollout-operator/${rollout_operator:charts:rollout-operator:version}
+        output_path: ${_instance}/10_rollout_operator
+        helm_values_files:
+          - ${_base_directory}/helmcharts/rollout-operator/${rollout_operator:charts:rollout-operator:version}/values-component.yaml
+          - ${_base_directory}/helmcharts/rollout-operator/${rollout_operator:charts:rollout-operator:version}/values-overrides.yaml
+        helm_params:
+          name: rollout-operator
+          namespace: ${rollout_operator:namespace}
