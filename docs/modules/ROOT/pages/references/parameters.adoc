@@ -11,6 +11,206 @@ default:: `syn-rollout-operator`
 The namespace in which to deploy this component.
 
 
+== `charts`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+rollout-operator:
+  source: https://grafana.github.io/helm-charts
+  version: 'v0.47.0'
+----
+
+Holds the reference to the used version of the charts.
+See https://github.com/projectsyn/component-rollout-operator/blob/master/class/defaults.yml[class/defaults.yml] for the current version.
+
+
+== `images`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+images:
+  rolloutOperator:
+    registry: docker.io
+    repository: grafana/rollout-operator
+----
+example::
++
+[source,yaml]
+----
+images:
+  rolloutOperator:
+    registry: my-docker-cache.example.org
+    tag: latest
+----
+
+Configures the image registry, repository and tag.
+
+[TIP]
+====
+If the `tag` parameter is not set, the one from the Helm chart will be used.
+====
+
+
+== `resources`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+resources:
+  requests:
+    cpu: 100m
+    memory: 100Mi
+  limits:
+    memory: 200Mi
+----
+
+Configure resource requests and limits of the rollout-operator.
+
+
+== `webhooks`
+
+Configure rollout-operator webhooks.
+
+=== `webhooks.enabled`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+webhooks:
+  enabled: true
+----
+
+Enable deployment of webhooks.
+
+=== `webhooks.failurePolicy`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+webhooks:
+  failurePolicy: 'Fail'
+----
+
+Validating and mutating webhook failure policy. `Ignore` or `Fail`.
+
+=== `webhooks.timeoutSeconds`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+webhooks:
+  timeoutSeconds: 10
+----
+
+Timeout in seconds for the prepare-downscale mutating webhook. Must be between 1 and 30.
+
+=== `webhooks.selfSignedCertSecretName`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+webhooks:
+  selfSignedCertSecretName: 'certificate'
+----
+
+Secret resource name for the TLS certificate to be used with the webhooks.
+
+=== `webhooks.objectSelector`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+webhooks:
+  objectSelector: {}
+----
+example::
++
+[source,yaml]
+----
+webhooks:
+  objectSelector:
+    matchExpressions:
+      - key: app
+        operator: In
+        values:
+          - loki
+          - mimir
+----
+
+Selector to filter which objects the webhooks apply to.
+
+=== `webhooks.namespaceSelector`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+webhooks:
+  namespaceSelector:
+    matchLabels:
+      rollout-operator.syn.tools/allow: ''
+----
+
+Namespace selector applied to all webhooks. Defaults to restricting to the release namespace.
+
+
+== `monitoring`
+
+[horizontal]
+type:: boolean
+default::
++
+[source,yaml]
+----
+monitoring: true
+----
+
+Configures deployments of ServiceMonitor and PrometheusRule resources.
+
+
+== `alerts`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+alerts:
+  rules: ...
+----
+
+See https://github.com/projectsyn/component-rollout-operator/blob/master/class/defaults.yml[class/defaults.yml] for default rules.
+
+
 == Example
 
 [source,yaml]

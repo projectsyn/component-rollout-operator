@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app.kubernetes.io/instance: rollout-operator
+    app.kubernetes.io/managed-by: commodore
+    app.kubernetes.io/name: rollout-operator
+    app.kubernetes.io/version: v0.36.1
+    helm.sh/chart: rollout-operator-0.47.0
+  name: rollout-operator
+spec:
+  endpoints:
+    - port: http-metrics
+      scheme: http
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: rollout-operator
+      app.kubernetes.io/name: rollout-operator
