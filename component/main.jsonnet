@@ -1,6 +1,6 @@
 // main template for rollout-operator
+local alertpatching = import 'lib/alert-patching.libsonnet';
 local kap = import 'lib/kapitan.libjsonnet';
-local kube = import 'lib/kube.libjsonnet';
 local prom = import 'lib/prom.libsonnet';
 local inv = kap.inventory();
 
@@ -31,8 +31,11 @@ local prometheusRules = prom.generateRules('rollout-operator', { 'rollout-operat
   },
 };
 
+local has_monitoring = std.member(inv.applications, 'prometheus') || std.member(inv.applications, 'openshift4-monitoring');
+local has_alerts = std.length(params.alerts.rules) > 0;
+
 // Define outputs below
 {
   '00_namespace': namespace,
-  [if params.monitoring then '20_prometheus_rule']: prometheusRules,
+  [if params.monitoring && has_monitoring && has_alerts then '20_prometheus_rule']: prometheusRules,
 }

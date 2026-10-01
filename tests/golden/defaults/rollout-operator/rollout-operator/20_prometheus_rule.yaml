@@ -4,6 +4,7 @@ metadata:
   labels:
     app.kubernetes.io/managed-by: commodore
     app.kubernetes.io/name: rollout-operator
+    monitoring.syn.tools/enabled: 'true'
     name: rollout-operator
   name: rollout-operator
   namespace: syn-rollout-operator
